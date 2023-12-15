@@ -41,10 +41,7 @@ __This may take some time__ the first time.
 ```
 from colonoscopy_reporter import ColonoscopyRecord
 
-file = f"data/medical-record-{i}.pdf"
-print('=' * 100, flush=True)
-print(file)
-    
+file = f"data/medical-record-1.pdf"
 record = ColonoscopyRecord(pdf_filename=file)
 record.main_pipeline()
 print(record.format_final_decision())
