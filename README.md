@@ -58,3 +58,35 @@ record.main_pipeline()
 print(record.format_final_decision())
 record.print_report_to_json()
 ```
+
+
+# IMPLEMENTATION
+
+## Reading PDF
+The script uses the PyMuPDF (fitz) library or langchain's PyPDFLoader to read the contents of the PDF file. It attempts both methods, providing flexibility in handling different PDF formats.
+
+## Information Extraction
+The [KOR](https://eyurtsev.github.io/kor/) package (Knowledge Oriented Reasoning) extraction chain is employed to extract relevant personal and medical information from the medical records. The extracted information includes patient details, requested procedures, date of birth, and more.
+
+## Conservative Treatment Analysis
+The script analyzes conservative treatments mentioned in the report using a __zero-shot classification model__ from Hugging Face. 
+If successful treatments are identified, the colonoscopy request may be rejected based on evidence of prior improvement.
+
+## Symptoms Evaluations
+Symptoms for "colorectal cancer" and for "juvenile polyposis syndrome" are stored in ChromaDB Vector Database.
+Then all symptoms found in the report are compared to those in the vector database.
+If they are similar enough we report positive symptoms for the corresponding condition.
+
+Another model from Hugging Face is used to compute the embeddings.
+In this case we use the model "kamalkraj/BioSimCSE-BioLinkBERT-BASE"
+which has been trained on biomedical literature.
+
+## Guidelines Check
+The script follows specific guidelines to determine if the colonoscopy request aligns with accepted medical criteria. 
+Guidelines include considerations for patient age, family history, and symptoms associated with colorectal cancer or juvenile polyposis syndrome.
+
+## Final Decision
+Based on the information extracted and the guidelines check, the script makes a final decision on whether to accept or reject the colonoscopy request. If rejected, the reason is provided.
+
+## Reporting
+The script generates a detailed report containing patient information, age, requested procedure, symptoms, family history, and more. This report is printed to the console in JSON format.
